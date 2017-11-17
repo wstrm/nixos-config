@@ -10,47 +10,127 @@
       ./hardware-configuration.nix
     ];
 
-  # Use the GRUB 2 boot loader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
-  # boot.loader.grub.efiSupport = true;
-  # boot.loader.grub.efiInstallAsRemovable = true;
-  # boot.loader.efi.efiSysMountPoint = "/boot/efi";
-  # Define on which hard drive you want to install Grub.
-  boot.loader.grub.device = "/dev/sda"; # or "nodev" for efi only
+  # Use the systemd-boot EFI boot loader.
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  boot.initrd.luks.devices = [
+    {
+      name = "root";
+      device = "/dev/disk/by-uuid/f9b83d9e-fbb2-485b-b28e-f6199183944c";
+      preLVM = true;
+      allowDiscards = true;
+    }
+  ];
+
+  environment.sessionVariables = {
+    GOPATH="$HOME/Projects/go";
+    PATH="$PATH:$HOME/.local/bin:$HOME/Projects/go/bin";
+  };
 
   networking.hostName = "testos"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  networking.networkmanager.enable = true;
 
-  # Select internationalisation properties.
-  # i18n = {
-  #   consoleFont = "Lat2-Terminus16";
-  #   consoleKeyMap = "us";
-  #   defaultLocale = "en_US.UTF-8";
-  # };
+  fonts = {
+    enableFontDir = true;
+    fontconfig = {
+      defaultFonts = {
+        monospace = [ "Fira Mono" ];
+        sansSerif = [ "Fira Sans" ];
+      };
+      ultimate.enable = true;
+    };
+    fonts = with pkgs; [
+      fira
+      fira-mono
+    ];
+  };
 
   # Set your time zone.
   time.timeZone = "Europe/Stockholm";
+
+  hardware.pulseaudio.enable = true;
+
+  programs.zsh.enable = true;
 
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
 	wget
 	neovim
-        slock
-	git
+	gitAndTools.gitFull
+	sudo
+	dmenu
+	bc
+	manpages
+	zlib
+	binutils
+	nix
+	scrot
+	wget
+	gcc
+	gnumake
+	powertop
+	pass
+	go
+        st
+        dunst
+        libnotify
+        xsel
+        dwm
+        i3lock
+	qutebrowser
+	firefox
+	chromium
+	xautolock
+        oh-my-zsh
   ];
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.bash.enableCompletion = true;
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = { enable = true; enableSSHSupport = true; };
+  services.redshift = {
+    enable = true;
+    latitude = "65.0";
+    longitude = "22.0";
+  };
 
-  # List services that you want to enable:
+  programs.gnupg.agent = { enable = true; enableSSHSupport = true; };
+
+  nixpkgs.config = {
+    allowUnfree = true;
+    packageOverrides = pkgs: {
+      neovim = pkgs.neovim.override {
+        vimAlias = true;
+	configure = import ./pkgs/nvim.nix {
+	  inherit pkgs;
+	};
+      };
+      /*
+      dwm = pkgs.neovim.override {
+        patches = 
+        [
+        ];
+      };
+      st = pkgs.callPackage ./st {
+        patches =
+        [
+        ];
+      };
+      */
+    };
+  };
+
+  programs.zsh.interactiveShellInit = ''
+    export ZSH=${pkgs.oh-my-zsh}/share/oh-my-zsh/
+
+    ZSH_THEME="gentoo"
+    plugins=(git)
+
+    source $ZSH/oh-my-zsh.sh
+    '';
+
+  programs.zsh.promptInit = ""; # avoid conflict with oh-my-zsh
 
   # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  services.openssh.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
@@ -59,34 +139,55 @@
   # networking.firewall.enable = false;
 
   # Enable CUPS to print documents.
-  # services.printing.enable = true;
+  services.printing.enable = true;
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-  services.xserver.layout = "se";
-  services.xserver.xkbOptions = "eurosign:e";
+  services.xserver = {
+    # Enable the X11 windowing system.
+    enable = true;
+    layout = "se";
+    xkbOptions = "eurosign:e";
 
-  # Enable touchpad support.
-  services.xserver.libinput.enable = true;
+    # Enable touchpad support.
+    libinput.enable = true;
 
-  # Enable the KDE Desktop Environment.
-  services.xserver.displayManager.slim.enable = true;
-  services.xserver.displayManager.slim.defaultUser = "wp";
-  services.xserver.displayManager.slim.autoLogin = true;
-  services.xserver.desktopManager.default = "none";
-  services.xserver.windowManager.awesome.enable = true;
-  services.xserver.windowManager.default = "awesome";
+    # Enable the KDE Desktop Environment.
+    displayManager = {
+      slim.enable = true;
+      slim.defaultUser = "wp";
+      slim.autoLogin = true;
+      sessionCommands = ''
+        export _JAVA_AWT_WM_NONREPARENTING=1; # fix grey box for Java GUIs
+        xautolock -time 10 -detectsleep -lockaftersleep -locker 'i3lock -c 000000 -u -f' &
+      '';
+    };
+
+    desktopManager.default = "none";
+
+    windowManager = {
+      dwm.enable = true;
+      default = "dwm";
+    };
+
+    wacom.enable = true;
+  };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.extraUsers.wp = {
      isNormalUser = true;
      uid = 1000;
+     home = "/home/wp";
+     description = "William Wennerström";
+     extraGroups =  [ "wheel" "network" "sys" "lp" "video" "optical" "storage" "scanner" "power" ];
+     shell = "${pkgs.zsh}/bin/zsh";
+     isSystemUser = false;
+     useDefaultShell = true;
   };
+
+  security.sudo.enable = true;
 
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
   # should.
   system.stateVersion = "17.09"; # Did you read the comment?
-
 }
