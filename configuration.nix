@@ -8,6 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./host/voltaire.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -17,7 +18,7 @@
   boot.initrd.luks.devices = [
     {
       name = "root";
-      device = "/dev/disk/by-uuid/f9b83d9e-fbb2-485b-b28e-f6199183944c";
+      device = "/dev/sda2";
       preLVM = true;
       allowDiscards = true;
     }
@@ -28,8 +29,14 @@
     PATH="$PATH:$HOME/.local/bin:$HOME/Projects/go/bin";
   };
 
-  networking.hostName = "testos"; # Define your hostname.
-  networking.networkmanager.enable = true;
+  networking = {
+    networkmanager.enable = true;
+
+    # Open ports in the firewall.
+    # firewall.allowedTCPPorts = [ ... ];
+    # firewall.allowedUDPPorts = [ ... ];
+    firewall.enable = true;
+  };
 
   fonts = {
     enableFontDir = true;
@@ -62,6 +69,8 @@
 	sudo
 	dmenu
 	bc
+        htop
+        gnupg
 	manpages
 	zlib
 	binutils
@@ -70,7 +79,11 @@
 	wget
 	gcc
 	gnumake
-	powertop
+        p7zip
+        mupdf
+        mosh
+        mpv
+        zip
 	pass
 	go
         st
@@ -131,12 +144,6 @@
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
