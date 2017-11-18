@@ -171,6 +171,8 @@
     wacom.enable = true;
   };
 
+  services.physlock.enable = true;
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.extraUsers.wp = {
     isNormalUser = true;
