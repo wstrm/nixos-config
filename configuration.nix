@@ -2,14 +2,14 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, fetchurl, ... }:
 
-{
-  imports =
+  {
+    imports =
     [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      ./host/voltaire.nix
-    ];
+    ./hardware-configuration.nix
+    ./host/voltaire.nix
+  ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -63,40 +63,40 @@
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
-	wget
-	neovim
-	gitAndTools.gitFull
-	sudo
-	dmenu
-	bc
-        htop
-        gnupg
-	manpages
-	zlib
-	binutils
-	nix
-	scrot
-	wget
-	gcc
-	gnumake
-        p7zip
-        mupdf
-        mosh
-        mpv
-        zip
-	pass
-	go
-        st
-        dunst
-        libnotify
-        xsel
-        dwm
-        i3lock
-	qutebrowser
-	firefox
-	chromium
-	xautolock
-        oh-my-zsh
+    wget
+    neovim
+    gitAndTools.gitFull
+    sudo
+    dmenu
+    bc
+    htop
+    gnupg
+    manpages
+    zlib
+    binutils
+    nix
+    scrot
+    wget
+    gcc
+    gnumake
+    p7zip
+    mupdf
+    mosh
+    mpv
+    zip
+    pass
+    go
+    st
+    dunst
+    libnotify
+    xsel
+    dwm
+    i3lock
+    qutebrowser
+    firefox
+    chromium
+    xautolock
+    oh-my-zsh
   ];
 
   services.redshift = {
@@ -112,22 +112,12 @@
     packageOverrides = pkgs: {
       neovim = pkgs.neovim.override {
         vimAlias = true;
-	configure = import ./pkgs/nvim.nix {
-	  inherit pkgs;
-	};
+        configure = import ./pkgs/nvim.nix {
+          inherit pkgs;
+        };
       };
-      /*
-      dwm = pkgs.neovim.override {
-        patches = 
-        [
-        ];
-      };
-      st = pkgs.callPackage ./st {
-        patches =
-        [
-        ];
-      };
-      */
+      dwm = pkgs.callPackage ./pkgs/dwm {};
+      st = pkgs.callPackage ./pkgs/st {};
     };
   };
 
@@ -138,7 +128,7 @@
     plugins=(git)
 
     source $ZSH/oh-my-zsh.sh
-    '';
+  '';
 
   programs.zsh.promptInit = ""; # avoid conflict with oh-my-zsh
 
@@ -180,14 +170,14 @@
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.extraUsers.wp = {
-     isNormalUser = true;
-     uid = 1000;
-     home = "/home/wp";
-     description = "William Wennerström";
-     extraGroups =  [ "wheel" "network" "sys" "lp" "video" "optical" "storage" "scanner" "power" ];
-     shell = "${pkgs.zsh}/bin/zsh";
-     isSystemUser = false;
-     useDefaultShell = true;
+    isNormalUser = true;
+    uid = 1000;
+    home = "/home/wp";
+    description = "William Wennerström";
+    extraGroups =  [ "wheel" "network" "sys" "lp" "video" "optical" "storage" "scanner" "power" ];
+    shell = "${pkgs.zsh}/bin/zsh";
+    isSystemUser = false;
+    useDefaultShell = true;
   };
 
   security.sudo.enable = true;

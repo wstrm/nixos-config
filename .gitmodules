@@ -1,0 +1,6 @@
+[submodule "pkgs/st"]
+	path = pkgs/st
+	url = git@github.com:willeponken/st.git
+[submodule "pkgs/dwm"]
+	path = pkgs/dwm
+	url = git@github.com:willeponken/dwm.git
