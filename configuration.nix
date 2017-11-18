@@ -97,6 +97,7 @@
     chromium
     xautolock
     oh-my-zsh
+    slstatus
   ];
 
   services.redshift = {
@@ -118,6 +119,7 @@
       };
       dwm = pkgs.callPackage ./pkgs/dwm {};
       st = pkgs.callPackage ./pkgs/st {};
+      slstatus = pkgs.callPackage ./pkgs/slstatus {};
     };
   };
 
@@ -155,6 +157,7 @@
       sessionCommands = ''
         export _JAVA_AWT_WM_NONREPARENTING=1; # fix grey box for Java GUIs
         xautolock -time 10 -detectsleep -lockaftersleep -locker 'i3lock -c 000000 -u -f' &
+        slstatus &
       '';
     };
 

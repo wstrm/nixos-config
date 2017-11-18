@@ -4,3 +4,6 @@
 [submodule "pkgs/dwm"]
 	path = pkgs/dwm
 	url = git@github.com:willeponken/dwm.git
+[submodule "pkgs/slstatus"]
+	path = pkgs/slstatus
+	url = git@github.com:willeponken/slstatus.git
