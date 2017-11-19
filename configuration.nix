@@ -29,6 +29,45 @@
     PATH="$PATH:$HOME/.local/bin:$HOME/Projects/go/bin";
   };
 
+  environment.extraInit = ''
+    rm -f ~/.config/Trolltech.conf
+    rm -f ~/.config/gtk-3.0/settings.ini
+    export XDG_DATA_DIRS="${pkgs.arc-theme}/share:$XDG_DATA_DIRS"
+    export XDG_CONFIG_DIRS="/etc/xdg:$XDG_CONFIG_DIRS"
+    export GTK2_RC_FILES=$GTK_RC_FILES:${pkgs.writeText "iconrc" ''gtk-icon-theme-name="Arc-Dark"''}:${pkgs.arc-theme}/share/themes/Arc-Dark/gtk-2.0/gtkrc
+    export GDK_PIXBUF_MODULE_FILE=$(echo ${pkgs.librsvg.out}/lib/gdk-pixbuf-2.0/*/loaders.cache)
+    export QT_STYLE_OVERRIDE=Arc-Dark
+
+    export XDG_CONFIG_HOME=$HOME/.config
+    export XDG_DATA_HOME=$HOME/.local/share
+    export XDG_CACHE_HOME=$HOME/.cache
+  '';
+
+  environment.etc."xdg/Trolltech.conf" = {
+    text = ''
+      [Qt]
+      style=Arc-Dark
+    '';
+    mode = "444";
+  };
+
+  environment.etc."xdg/gtk-3.0/settings.ini" = {
+    text = ''
+      [Settings]
+      gtk-icon-theme-name=Arc-Dark
+      gtk-theme-name=Arc-Dark
+    '';
+    mode = "444";
+  };
+
+  environment.etc."skel/.gnupg/gpg-agent.conf" = {
+    text = ''
+      default-cache-ttl 7200
+      max-cache-ttl 7200
+    '';
+    mode = "444";
+  };
+
   networking = {
     networkmanager.enable = true;
 
@@ -92,6 +131,8 @@
     xsel
     dwm
     i3lock
+    arc-theme
+    arc-icon-theme
     qutebrowser
     firefox
     chromium
