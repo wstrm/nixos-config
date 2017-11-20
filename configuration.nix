@@ -168,10 +168,24 @@
 
     bindkey -v # enable vi-mode
 
-    ZSH_THEME="gentoo"
-    plugins=(git golang common-aliases systemd vi-mode)
+    plugins=(git golang common-aliases systemd vi-mode shrink-path)
+
+    setopt prompt_subst
 
     source $ZSH/oh-my-zsh.sh
+
+    function prompt_char {
+        if [ $UID -eq 0 ]; then echo "#"; else echo $; fi
+    }
+
+    function prompt_dir {
+        shrink_path -f
+    }
+
+    PROMPT='%(!.%{$fg_bold[red]%}.%{$fg_bold[green]%}%n@)%m %{$fg_bold[blue]%}$(prompt_dir) $(git_prompt_info)%_$(prompt_char)%{$reset_color%} '
+
+    ZSH_THEME_GIT_PROMPT_PREFIX="("
+    ZSH_THEME_GIT_PROMPT_SUFFIX=") "
   '';
 
   programs.zsh.promptInit = ""; # avoid conflict with oh-my-zsh
