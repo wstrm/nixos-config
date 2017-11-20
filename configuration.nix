@@ -166,8 +166,10 @@
   programs.zsh.interactiveShellInit = ''
     export ZSH=${pkgs.oh-my-zsh}/share/oh-my-zsh/
 
+    bindkey -v # enable vi-mode
+
     ZSH_THEME="gentoo"
-    plugins=(git)
+    plugins=(git golang common-aliases systemd vi-mode)
 
     source $ZSH/oh-my-zsh.sh
   '';
