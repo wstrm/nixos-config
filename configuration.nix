@@ -186,6 +186,7 @@
 
     ZSH_THEME_GIT_PROMPT_PREFIX="("
     ZSH_THEME_GIT_PROMPT_SUFFIX=") "
+    KEYTIMEOUT=1 # remove annoying 0.4s lag on ESC in vi-mode
   '';
 
   programs.zsh.promptInit = ""; # avoid conflict with oh-my-zsh
