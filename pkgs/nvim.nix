@@ -8,6 +8,7 @@
 
 		set number
 		set norelativenumber
+                set encoding=utf-8
 
                 set statusline+=%{fugitive#statusline()}
                 set statusline+=%#warningmsg#
@@ -18,6 +19,8 @@
                 let g:syntastic_auto_loc_list = 1
                 let g:syntastic_check_on_open = 1
                 let g:syntastic_check_on_wq = 0
+
+                let g:go_fmt_command = "goimports"
 	'';
 	vam.pluginDictionaries = [
 		{
