@@ -34,7 +34,7 @@ systemctl start wpa_supplicant
 
 # Insert USB with SSH keys and mount, then...
 install -m 600 <id_rsa here> <id_rsa.pub here> ~/.ssh/
-git clone git@github.com:willeponken/nixos-config.git /tmp/nixos-config
+git clone --recursive git@github.com:willeponken/nixos-config.git /tmp/nixos-config
 cp -a /tmp/nixos-config/. /mnt/etc/nixos/.
 
 nixos-install
