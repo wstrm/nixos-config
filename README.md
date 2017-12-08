@@ -32,10 +32,10 @@ network={
 ^D
 systemctl start wpa_supplicant
 
-# This is kind of stupid, make sure nothing important gets overwritten
-curl -L https://github.com/willeponken/nixos-config/archive/master.zip > /tmp/nixos-config.zip
-unzip /tmp/nixos-config.zip -d /tmp/
-cp -R /tmp/nixos-config-master/. /mnt/etc/nixos/.
+# Insert USB with SSH keys and mount, then...
+install -m 600 <id_rsa here> <id_rsa.pub here> ~/.ssh/
+git clone git@github.com:willeponken/nixos-config.git /tmp/nixos-config
+cp -a /tmp/nixos-config/. /mnt/etc/nixos/.
 
 nixos-install
 reboot

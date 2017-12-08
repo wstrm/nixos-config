@@ -236,7 +236,7 @@
     uid = 1000;
     home = "/home/wp";
     description = "William Wennerström";
-    extraGroups =  [ "wheel" "network" "sys" "lp" "video" "optical" "storage" "scanner" "power" ];
+    extraGroups =  [ "wheel" "network" "sys" "lp" "video" "optical" "storage" "scanner" "power" "docker" ];
     shell = "${pkgs.zsh}/bin/zsh";
     isSystemUser = false;
     useDefaultShell = true;
