@@ -8,21 +8,12 @@
     imports =
     [ # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    ./host/voltaire.nix
+    ./host/hubble.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
-  boot.initrd.luks.devices = [
-    {
-      name = "root";
-      device = "/dev/sda2";
-      preLVM = true;
-      allowDiscards = true;
-    }
-  ];
 
   environment.sessionVariables = {
     GOPATH="$HOME/Projects/go";
@@ -137,6 +128,7 @@
     chromium
     xautolock
     oh-my-zsh
+    pciutils
     slstatus
   ];
 
