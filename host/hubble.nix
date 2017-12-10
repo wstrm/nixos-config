@@ -1,11 +1,22 @@
 { config, lib, pkgs, ... }:
 
 {
-  networking.hostName = "hubble";
+  networking = {
+    hostName = "hubble";
+  };
 
   services.xserver.videoDrivers = [ "nvidia" ];
-  
   services.xserver.exportConfiguration = true;
+
+  virtualisation.libvirtd = {
+    enable = true;
+    enableKVM = true;
+    qemuOvmf = true;
+  };
+
+  users.extraUsers.wp = {
+    extraGroups = [ "libvirtd" ];
+  };
 
   environment.etc = [ 
     {

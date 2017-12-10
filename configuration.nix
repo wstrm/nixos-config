@@ -15,48 +15,60 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  environment.sessionVariables = {
-    GOPATH="$HOME/Projects/go";
-    PATH="$PATH:$HOME/.local/bin:$HOME/Projects/go/bin";
+  i18n = {
+    consoleKeyMap = "sv-latin1";
+    defaultLocale = "en_us.UTF-8";
   };
 
-  environment.extraInit = ''
-    rm -f ~/.config/Trolltech.conf
-    rm -f ~/.config/gtk-3.0/settings.ini
-    export XDG_DATA_DIRS="${pkgs.arc-theme}/share:$XDG_DATA_DIRS"
-    export XDG_CONFIG_DIRS="/etc/xdg:$XDG_CONFIG_DIRS"
-    export GTK2_RC_FILES=$GTK_RC_FILES:${pkgs.writeText "iconrc" ''gtk-icon-theme-name="Arc-Dark"''}:${pkgs.arc-theme}/share/themes/Arc-Dark/gtk-2.0/gtkrc
-    export GDK_PIXBUF_MODULE_FILE=$(echo ${pkgs.librsvg.out}/lib/gdk-pixbuf-2.0/*/loaders.cache)
-    export QT_STYLE_OVERRIDE=Arc-Dark
+  environment = {
+    variables = {
+      EDITOR=pkgs.lib.mkOverride 0 "vim";
+    };
 
-    export XDG_CONFIG_HOME=$HOME/.config
-    export XDG_DATA_HOME=$HOME/.local/share
-    export XDG_CACHE_HOME=$HOME/.cache
-  '';
+    sessionVariables = {
+      GOPATH="$HOME/Projects/go";
+      PATH="$PATH:$HOME/.local/bin:$HOME/Projects/go/bin";
+      EDITOR=pkgs.lib.mkOverride 0 "vim";
+    };
 
-  environment.etc."xdg/Trolltech.conf" = {
-    text = ''
-      [Qt]
-      style=Arc-Dark
+    extraInit = ''
+      rm -f ~/.config/Trolltech.conf
+      rm -f ~/.config/gtk-3.0/settings.ini
+      export XDG_DATA_DIRS="${pkgs.arc-theme}/share:$XDG_DATA_DIRS"
+      export XDG_CONFIG_DIRS="/etc/xdg:$XDG_CONFIG_DIRS"
+      export GTK2_RC_FILES=$GTK_RC_FILES:${pkgs.writeText "iconrc" ''gtk-icon-theme-name="Arc-Dark"''}:${pkgs.arc-theme}/share/themes/Arc-Dark/gtk-2.0/gtkrc
+      export GDK_PIXBUF_MODULE_FILE=$(echo ${pkgs.librsvg.out}/lib/gdk-pixbuf-2.0/*/loaders.cache)
+      export QT_STYLE_OVERRIDE=Arc-Dark
+
+      export XDG_CONFIG_HOME=$HOME/.config
+      export XDG_DATA_HOME=$HOME/.local/share
+      export XDG_CACHE_HOME=$HOME/.cache
     '';
-    mode = "444";
-  };
 
-  environment.etc."xdg/gtk-3.0/settings.ini" = {
-    text = ''
-      [Settings]
-      gtk-icon-theme-name=Arc-Dark
-      gtk-theme-name=Arc-Dark
-    '';
-    mode = "444";
-  };
+    etc."xdg/Trolltech.conf" = {
+      text = ''
+        [Qt]
+        style=Arc-Dark
+      '';
+      mode = "444";
+    };
 
-  environment.etc."skel/.gnupg/gpg-agent.conf" = {
-    text = ''
-      default-cache-ttl 7200
-      max-cache-ttl 7200
-    '';
-    mode = "444";
+    etc."xdg/gtk-3.0/settings.ini" = {
+      text = ''
+        [Settings]
+        gtk-icon-theme-name=Arc-Dark
+        gtk-theme-name=Arc-Dark
+      '';
+      mode = "444";
+    };
+
+    etc."skel/.gnupg/gpg-agent.conf" = {
+      text = ''
+        default-cache-ttl 7200
+        max-cache-ttl 7200
+      '';
+      mode = "444";
+    };
   };
 
   networking = {
@@ -130,6 +142,7 @@
     oh-my-zsh
     pciutils
     slstatus
+    unclutter
   ];
 
   services.redshift = {
@@ -207,6 +220,7 @@
         export _JAVA_AWT_WM_NONREPARENTING=1; # fix grey box for Java GUIs
         xautolock -time 10 -detectsleep -lockaftersleep -locker 'i3lock -c 000000 -u -f' &
         slstatus &
+        unclutter &
       '';
     };
 
