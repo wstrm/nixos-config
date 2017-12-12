@@ -8,7 +8,7 @@
     imports =
     [ # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    ./host/hubble.nix
+    ./host/voltaire.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -143,6 +143,7 @@
     pciutils
     slstatus
     unclutter
+    spotify
   ];
 
   services.redshift = {
