@@ -42,6 +42,7 @@ in
   };
 
   environment.systemPackages = with pkgs; [
+     brightnessctl
      wget
      curl
      neovim
@@ -57,6 +58,12 @@ in
   programs = {
     zsh.enable = true;
     gnupg.agent.enable = true;
+  };
+
+  security = {
+	  sudo = {
+		  wheelNeedsPassword = false;
+	  };
   };
 
   # This value determines the NixOS release from which the default

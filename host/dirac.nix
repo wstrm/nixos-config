@@ -3,16 +3,10 @@
 {
   imports =
     [
-	../module/dotfiles.nix
 	../module/dwm.nix
-	../module/neovim.nix
     ];
 
-  modules.dotfiles.enable = true;
   modules.dwm.enable = true;
-  modules.neovim.enable = true;
-
-  networking.hostName = "dirac";
 
   boot.kernelModules = [ "udl" ];
   boot.extraModprobeConfig = "options thinkpad_acpi fan_control=1";
@@ -44,7 +38,8 @@
 
       # Configure keymap in X11
       layout = "us";
-      xkbOptions = "eurosign:e";
+      xkbVariant = "altgr-intl";
+      xkbOptions = "caps:ctrl_modifier";
 
       # Enable touchpad support.
       libinput.enable = true;
@@ -57,6 +52,8 @@
   };
 
   networking = {
+    hostName = "dirac";
+
     networkmanager.enable = true;
 
     interfaces = {
@@ -76,6 +73,18 @@
       package = pkgs.pulseaudioFull;
     };
 
+    opengl.enable = true;
+
+    bluetooth.enable = true;
+    bluetooth.package = pkgs.bluezFull;
+
     enableAllFirmware = true;
+  };
+
+  sound = {
+    enable = true;
+    mediaKeys = {
+      enable = true;
+    };
   };
 }

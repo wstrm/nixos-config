@@ -23,22 +23,25 @@ with lib;
 			nixpkgs.overlays = [
 			      (self: super: {
 			      	dwm = super.dwm.overrideAttrs (_: rec {
-			      		src = super.fetchgit {
+			      		src = builtins.fetchGit {
 			      			url = "https://github.com/wstrm/dwm";
 			      			rev = "d4c1abe4af67cedf4a6172ff869751268e867f53";
-						sha256 = "10h54zl399v2pzh1khzva9z8bzvvw4y73d66s2sk416w21rf0zc7";
 			      		};
 			      	});
 			      	st = super.st.overrideAttrs (oldAttrs: rec {
 			      		buildInputs = oldAttrs.buildInputs ++ [ super.harfbuzz ];
-			      		src = super.fetchgit {
+			      		src = builtins.fetchGit {
 			      			url = "https://github.com/wstrm/st";
 			      			rev = "1824161fb82be47bcd92e6d134f9addec0f52270";
-						sha256 = "1p33by594syq4di5xqjjvyzzpn0qsjzxravz3c5r2nng321173ra";
 			      		};
 			      	});
-			      })
-			];
+				slstatus = super.st.overrideAttrs (oldAttrs: rec {
+			      		src = builtins.fetchGit {
+			      			url = "https://github.com/wstrm/slstatus";
+						rev = "6df7d7386ca1e0bc7ef847a213ea6a31ffda4703";
+			      		};
+			      });
+			})];
 
 			services.xserver = {
 				enable = true;
