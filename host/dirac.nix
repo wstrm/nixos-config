@@ -3,7 +3,7 @@
 {
   imports =
     [
-	../module/dwm.nix
+      ../module/dwm.nix
     ];
 
   modules.dwm.enable = true;
@@ -28,10 +28,10 @@
       displayManager = {
         gdm.enable = true;
         defaultSession = "none+dwm";
-	sessionCommands = ''
-	  ${lib.getBin pkgs.xorg.xrandr}/bin/xrandr --setprovideroutputsource 1 0
-	  ${lib.getBin pkgs.xorg.xrandr}/bin/xrandr --setprovideroutputsource 2 0
-	'';
+        sessionCommands = ''
+          ${lib.getBin pkgs.xorg.xrandr}/bin/xrandr --setprovideroutputsource 1 0
+          ${lib.getBin pkgs.xorg.xrandr}/bin/xrandr --setprovideroutputsource 2 0
+        '';
       };
 
       videoDrivers = [ "displaylink" "modesetting" ];
@@ -45,7 +45,7 @@
       libinput.enable = true;
       wacom.enable = true;
     };
-  
+
 
     # Enable CUPS to print documents.
     printing.enable = true;
