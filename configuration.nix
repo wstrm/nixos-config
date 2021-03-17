@@ -41,7 +41,6 @@ in
   };
 
   environment.systemPackages = with pkgs; [
-    brightnessctl
     wget
     curl
     neovim

@@ -25,6 +25,7 @@ in
 
   config = mkIf cfg.enable (mkMerge [{
     environment.systemPackages = with pkgs; [
+      brightnessctl
       autorandr
       slstatus
       dmenu

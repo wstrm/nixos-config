@@ -21,18 +21,30 @@
   virtualisation.docker.enable = true;
 
   services = {
+    redshift = {
+      enable = true;
+      brightness = {
+        day = "1";
+        night = "0.90";
+      };
+      temperature = {
+        day = 6500;
+        night = 3500;
+      };
+    };
     xserver = {
       enable = true;
 
-      desktopManager.gnome3.enable = true;
-      displayManager = {
-        gdm.enable = true;
-        defaultSession = "none+dwm";
-        sessionCommands = ''
-          ${lib.getBin pkgs.xorg.xrandr}/bin/xrandr --setprovideroutputsource 1 0
-          ${lib.getBin pkgs.xorg.xrandr}/bin/xrandr --setprovideroutputsource 2 0
-        '';
+      displayManager.lightdm.enable = true;
+      displayManager.autoLogin = {
+        enable = true;
+        user = "wstrm";
       };
+      displayManager.defaultSession = "none+dwm";
+      displayManager.sessionCommands = ''
+        ${lib.getBin pkgs.xorg.xrandr}/bin/xrandr --setprovideroutputsource 1 0
+        ${lib.getBin pkgs.xorg.xrandr}/bin/xrandr --setprovideroutputsource 2 0
+      '';
 
       videoDrivers = [ "displaylink" "modesetting" ];
 
@@ -87,4 +99,6 @@
       enable = true;
     };
   };
+
+  location.provider = "geoclue2";
 }
