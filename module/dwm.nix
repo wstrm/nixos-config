@@ -11,7 +11,7 @@ in
     };
     dwmRev = mkOption {
       type = types.str;
-      default = "d4c1abe4af67cedf4a6172ff869751268e867f53";
+      default = "73ab721aae7e19e1fa03df6a327bfed5374fc7cc";
     };
     slstatusRev = mkOption {
       type = types.str;
@@ -29,7 +29,6 @@ in
       autorandr
       slstatus
       dmenu
-      tmux
       st
     ];
 
@@ -67,8 +66,16 @@ in
     };
 
     # Control physical access to a linux computer by locking all of its virtual terminals.
-    services.physlock.enable = true;
-    programs.slock.enable = true;
+    services.physlock = {
+      enable = true;
+      allowAnyUser = true;
+    };
+
+    # tmux provides scrollback support in the st terminal.
+    programs.tmux = {
+      enable = true;
+      extraConfig = builtins.readFile ../dotfiles/tmux/.tmux.conf;
+    };
 
     fonts.fonts = with pkgs; [
       jetbrains-mono

@@ -43,14 +43,6 @@ in
   environment.systemPackages = with pkgs; [
     wget
     curl
-    neovim
-    gitAndTools.gitFull
-    pass
-    spotify
-    qutebrowser
-    firefox
-    stow
-    go
   ];
 
   programs = {

@@ -1,0 +1,6 @@
+[submodule "dotfiles-private"]
+	path = dotfiles-private
+	url = git@github.com:wstrm/dotfiles-private.git
+[submodule "dotfiles"]
+	path = dotfiles
+	url = git@github.com:wstrm/dotfiles.git
